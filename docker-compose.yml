@@ -22,6 +22,7 @@ services:
 
   web:
     build: .
+    env_file: .env
     command: python manage.py runserver 0.0.0.0:8000
     stdin_open: true
     tty: true
@@ -33,4 +34,4 @@ services:
       migrations:
         condition: service_completed_successfully
     volumes:
-      - .:/app
+      - .:/app/py-controller/
