@@ -32,3 +32,5 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
+    volumes:
+      - .:/app
