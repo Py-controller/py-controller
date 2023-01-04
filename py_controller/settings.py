@@ -53,6 +53,7 @@ MY_APPS = [
     "plannings",
     "address",
     "accounts",
+    "categories",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -98,7 +99,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "db_py_controller",
+        "HOST": "localhost",
         "PORT": 5432,
     },
     "sqlite3": {
