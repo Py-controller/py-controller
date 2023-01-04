@@ -14,6 +14,20 @@
 
 <br />
 
+### Rodando localmente com docker:
+- requisitos: Docker e docker-compose instalados na máquina
+1. Faça o clone da do repósitorio e acesse a pasta clonada.
+```shell
+git clone git@github.com:Py-controller/py-controller.git
+
+cd py-controller
+```
+2. Verifique no arquivo docker-compose.yml se a porta do servico db-py-controller está disponivel.
+3. Rode o servidor.
+```shell
+docker-compose up
+```
+- obs: com o servidor rodando a cada alteração que for feita no projeto será refletida automaticamente para o container sem a necessidade de fazer o build novamente.
 
 ```bash
 > Features da aplicação 🧱
