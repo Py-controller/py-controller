@@ -12,7 +12,7 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     description = models.CharField(max_length=255)
     transaction_type = models.CharField(
-        max_length=7, choices=TransactionTypes.choices, default=TransactionTypes.RCT)
+        max_length=7, choices=TransactionTypes.choices)
     transaction_date = models.DateField()
     """account = models.ForeignKey('accounts.Account', related_name='transactions')
     category = models.ForeignKey('categories.Category', related_name='transactions')"""
