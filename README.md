@@ -27,6 +27,7 @@ cd py-controller
 ```shell
 docker-compose up
 ```
+para acessar a aplicação utilize: [localhost:8000](localhost:8000)
 - obs: com o servidor rodando a cada alteração que for feita no projeto será refletida automaticamente para o container sem a necessidade de fazer o build novamente.
 
 ```bash
