@@ -9,6 +9,3 @@ class CategoriesSerializer(serializers.ModelSerializer):
             "id",
             "name",
         ]
-
-    # def create(self, validated_data):
-    #     return Categories.objects.create(**validated_data)

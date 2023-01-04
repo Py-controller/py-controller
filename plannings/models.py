@@ -37,7 +37,7 @@ class Planning(models.Model):
     #     on_delete=models.CASCADE,
     #     related_name="plannings",
     # )
-    category = models.OneToOneField(
+    category = models.ForeignKey(
         "categories.Categories",
         on_delete=models.CASCADE,
         related_name="planning",
