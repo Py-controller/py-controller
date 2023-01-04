@@ -8,7 +8,7 @@ class StartChoice(models.TextChoices):
     MARCH = "March"
     APRIL = "April"
     MAY = "May"
-    JUN = "June"
+    JUNE = "June"
     JULY = "July"
     AUGUST = "August"
     SEPTEMBER = "September"
@@ -18,9 +18,9 @@ class StartChoice(models.TextChoices):
 
 
 class PlanningCycleChoice(models.TextChoices):
-    MONTH = "MONTH"
-    YEAR = "YEAR"
-    SEMESTER = "SEMESTER"
+    MONTH = "Month"
+    YEAR = "Year"
+    SEMESTER = "Semester"
 
 
 class Planning(models.Model):

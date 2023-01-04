@@ -13,6 +13,3 @@ class PlanningSerializer(serializers.ModelSerializer):
             "expense",
             "category",
         ]
-
-    def create(self, validated_data):
-        return Planning.objects.create(**validated_data)
