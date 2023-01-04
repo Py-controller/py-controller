@@ -13,3 +13,9 @@ class PlanningSerializer(serializers.ModelSerializer):
             "expense",
             "category",
         ]
+
+    def update(self, instance: Planning, validated_data: dict):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
