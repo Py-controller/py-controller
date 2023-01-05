@@ -32,11 +32,11 @@ class Planning(models.Model):
     number_of_cycles = models.IntegerField(default=1)
     expense = models.DecimalField(max_digits=15, decimal_places=2, null=False)
 
-    # account = models.ForeignKey(
-    #     "accounts.Account",
-    #     on_delete=models.CASCADE,
-    #     related_name="plannings",
-    # )
+    account = models.ForeignKey(
+        "accounts.Account",
+        on_delete=models.CASCADE,
+        related_name="plannings",
+    )
     category = models.ForeignKey(
         "categories.Categories",
         on_delete=models.CASCADE,

@@ -4,6 +4,10 @@ from .models import Planning
 from categories.models import Categories
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+from accounts.models import Account
+from django.http import Http404
+from rest_framework.exceptions import ErrorDetail
+import ipdb
 
 
 class PlanningView(generics.ListCreateAPIView):
@@ -14,14 +18,17 @@ class PlanningView(generics.ListCreateAPIView):
     queryset = Planning.objects.all()
 
     def create(self, request, *args, **kwargs):
-        pop_categories = request.data.pop("category")
-        category, _ = Categories.objects.get_or_create(name=pop_categories)
-        request.data["category"] = category.id
+        if "category" in request.data:
+            pop_categories = request.data.pop("category")
+            category, _ = Categories.objects.get_or_create(name=pop_categories)
+            request.data["category"] = category.id
+
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         get_category = Categories.objects.get(id=self.request.data["category"])
-        return serializer.save(category=get_category)
+        get_account = Account.objects.get(id=self.request.data["account"])
+        return serializer.save(category=get_category, account=get_account)
 
 
 class PlanningDetailView(generics.RetrieveUpdateDestroyAPIView):
