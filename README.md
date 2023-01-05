@@ -1,6 +1,7 @@
 > Repositório de projeto Back-End desenvolvido em Python para conclusão do módulo 5 da formação em desenvolvimento Full Stack da Kenzie Academy Brasil.
  <br />
  
+ 
  # .Py Controller 📊  
 *Controlando e organizando suas finanças*
 
@@ -13,6 +14,7 @@
 * ***Diagrama ER*** => [Clique aqui](https://drive.google.com/file/d/1DAFjaj7Kfvj0MWxeoPbuTFJndl6ERJ_3/view) e acesse o diagrama do Projeto.
 
 <br />
+&nbsp;
 
 ### Rodando localmente com docker:
 - requisitos: Docker e docker-compose instalados na máquina
@@ -30,15 +32,16 @@ docker-compose up
 para acessar a aplicação utilize: [localhost:8000](localhost:8000)
 - obs: com o servidor rodando a cada alteração que for feita no projeto será refletida automaticamente para o container sem a necessidade de fazer o build novamente.
 
-```bash
-> Features da aplicação 🧱
-```
+&nbsp;
+
+## Features da aplicação 🧱
+
 - [x] CRUD de usuários
 
 &nbsp;
-```bash
-> Ferramentas utilizadas 🛠 
-```
+
+## Ferramentas utilizadas 🛠 
+
  <img align="center" alt="python" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"> <img align="center" alt="github" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg">
  <img align="center" alt="vscode" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg"> <img align="center" alt="django" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain-wordmark.svg">
  <img align="center" alt="postgresql" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"> <img align="center" alt="typescript" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg">
@@ -46,9 +49,10 @@ para acessar a aplicação utilize: [localhost:8000](localhost:8000)
 
 
 &nbsp;
-```bash
-> Contribuintes ✨
-```
+
+
+## Contribuintes ✨
+
 Função   | Membro
 --------- | ------
 Scrum Master | [Gabriela Caldeira](https://www.linkedin.com/in/gabihcaldeira)
