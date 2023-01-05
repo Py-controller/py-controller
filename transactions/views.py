@@ -1,6 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .models import Transaction
 from .serializers import TransactionSerializer
+# from categories import Category
 
 
 class ListCreateTransactions(ListCreateAPIView):
@@ -15,6 +16,11 @@ class ListCreateTransactions(ListCreateAPIView):
             return queryset
 
         return super().get_queryset()
+    """
+    def create(self, request, *args, **kwargs):
+        category, _ = Category.objects.get_or_create()
+        return 
+    """
 
 
 class RetrieveUpdateDestroyTransaction(RetrieveUpdateDestroyAPIView):
