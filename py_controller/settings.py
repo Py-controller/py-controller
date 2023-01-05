@@ -45,7 +45,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "django-crontab",
+    # "django-crontab",
     "rest_framework_simplejwt",
 ]
 
@@ -160,4 +160,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 
-CRONJOBS = [("0 0 * * *", "users.tasks.delete_inactive_users")]
+# CRONJOBS = [("0 0 * * *", "users.tasks.delete_inactive_users")]
