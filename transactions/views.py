@@ -21,9 +21,27 @@ class ListCreateTransactions(ListCreateAPIView):
         queryset = Transaction.objects.filter(account__in=user_accounts)
 
         type_parameter = self.request.GET.get('type')
+        start_date_parameter = self.request.GET.get('start_date')
+        end_date_parameter = self.request.GET.get('end_date')
+
         if type_parameter:
             queryset = queryset.filter(
                 transaction_type=type_parameter)
+            return queryset
+
+        if end_date_parameter and start_date_parameter:
+            queryset = queryset.filter(
+                transaction_date__gte=start_date_parameter, transaction_date__lte=end_date_parameter)
+            return queryset
+
+        if start_date_parameter:
+            queryset = queryset.filter(
+                transaction_date__gte=start_date_parameter)
+            return queryset
+
+        if end_date_parameter:
+            queryset = queryset.filter(
+                transaction_date__lte=end_date_parameter)
             return queryset
 
         return queryset
