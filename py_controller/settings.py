@@ -45,6 +45,8 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    # "django-crontab",
+    "rest_framework_simplejwt",
 ]
 
 MY_APPS = [
@@ -53,6 +55,7 @@ MY_APPS = [
     "plannings",
     "address",
     "accounts",
+    "categories",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -98,8 +101,8 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "db_py_controller",
-        "PORT": 5432,
+        "HOST": "127.0.0.1",
+        "PORT": 5436,
     },
     "sqlite3": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -126,6 +129,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ]
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -150,3 +158,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+
+# CRONJOBS = [("0 0 * * *", "users.tasks.delete_inactive_users")]
