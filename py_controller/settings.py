@@ -157,3 +157,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+
+CRONJOBS = [("0 0 * * *", "users.tasks.delete_inactive_users")]
