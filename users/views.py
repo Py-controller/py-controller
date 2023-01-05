@@ -16,3 +16,4 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAccountOwner]
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    lookup_url_kwarg = "user_uuid"

@@ -1,8 +1,11 @@
-from rest_framework import permissions
-from .models import User
-from rest_framework.views import View
+from django.contrib import admin
+from django.urls import path
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .views import UserView, UserDetailView
 
-class IsAccountOwner(permissions.BasePermission):
-    def has_object_permission(self, request, view: View, obj: User) -> bool:
-        return request.user.is_authenticated and obj == request.user
+urlpatterns = [
+    path("users/", UserView.as_view()),
+    path("users/<str:user_uuid>/", UserDetailView.as_view()),
+    path("login/", TokenObtainPairView.as_view()),
+]
