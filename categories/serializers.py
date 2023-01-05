@@ -9,3 +9,10 @@ class CategoriesSerializer(serializers.ModelSerializer):
             "id",
             "name",
         ]
+
+class CategoriesNotIdSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categories
+        fields = [
+            "name",
+        ]

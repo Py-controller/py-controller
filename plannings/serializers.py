@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from categories.serializers import CategoriesSerializer
+from categories.serializers import CategoriesNotIdSerializer, CategoriesSerializer
 from .models import Planning
 from categories.models import Categories
 from accounts.models import Account
@@ -8,7 +8,7 @@ import ipdb
 
 
 class PlanningSerializer(serializers.ModelSerializer):
-    category = CategoriesSerializer()
+    category = CategoriesNotIdSerializer()
 
     class Meta:
         model = Planning
