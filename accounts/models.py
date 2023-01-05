@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 
 class ShiftOptions(models.TextChoices):
@@ -9,12 +10,21 @@ class ShiftOptions(models.TextChoices):
 
 class Account(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    account_number = models.CharField(max_length=9)
-    agency = models.CharField(max_length=4)
+    account_number = models.CharField(
+        max_length=20, validators=[MaxLengthValidator(20), MinLengthValidator(3)]
+    )
+    agency = models.CharField(
+        max_length=5, validators=[MaxLengthValidator(5), MinLengthValidator(3)]
+    )
     type = models.CharField(
         max_length=20, choices=ShiftOptions.choices, default=ShiftOptions.CC
     )
-    code = models.CharField(max_length=5,null=True, default=None)
+    code = models.CharField(
+        max_length=3,
+        validators=[MaxLengthValidator(3), MinLengthValidator(3)],
+        null=True,
+        default=None,
+    )
 
     user = models.ForeignKey(
         "users.User",
