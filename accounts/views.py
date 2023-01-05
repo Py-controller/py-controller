@@ -4,7 +4,8 @@ from django_filters import rest_framework as filters
 
 from accounts.models import Account
 from plannings.models import Planning
-from transactions.models import Transaction
+
+# from transactions.models import Transaction
 
 from .serializers import AccountSerializer
 
