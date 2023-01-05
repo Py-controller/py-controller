@@ -14,5 +14,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(
         max_length=7, choices=TransactionTypes.choices)
     transaction_date = models.DateField()
-    """account = models.ForeignKey('accounts.Account', related_name='transactions')
-    category = models.ForeignKey('categories.Category', related_name='transactions')"""
+    account = models.ForeignKey(
+        'accounts.Account', related_name='transactions', on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        'categories.Categories', related_name='transactions', on_delete=models.CASCADE)
