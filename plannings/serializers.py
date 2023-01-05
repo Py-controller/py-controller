@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from categories.serializers import CategoriesSerializer
 from .models import Planning
 from categories.models import Categories
 from accounts.models import Account
@@ -6,8 +8,7 @@ import ipdb
 
 
 class PlanningSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
-    account = serializers.SerializerMethodField()
+    category = CategoriesSerializer()
 
     class Meta:
         model = Planning
@@ -18,8 +19,16 @@ class PlanningSerializer(serializers.ModelSerializer):
             "number_of_cycles",
             "expense",
             "category",
-            "account",
+            "account_id",
         ]
+        read_only_fields = ["account_id"]
+
+    def create(self, validated_data):
+        category_data = validated_data.pop("category")
+        category_obj = Categories.objects.get_or_create(**category_data)[0]
+        planning_obj = Planning.objects.create(**validated_data, category_id=category_obj.id)
+        return planning_obj
+
 
     def update(self, instance: Planning, validated_data: dict):
         for key, value in validated_data.items():
@@ -27,14 +36,3 @@ class PlanningSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def get_category(self, obj):
-        get_category = Categories.objects.get(id=obj.category.id)
-        return get_category.name
-
-    def get_account(self, obj):
-        get_account = Account.objects.get(id=obj.account.id)
-        return {
-            "Account Number": get_account.account_number,
-            "Type Account": get_account.type,
-            "Owner Account": get_account.user.username,
-        }
