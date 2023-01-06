@@ -1,11 +1,11 @@
 from rest_framework import serializers
+from categories.serializers import CategoriesNotIdSerializer
 from .models import Planning
 from categories.models import Categories
-import ipdb
 
 
 class PlanningSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
+    category = CategoriesNotIdSerializer()
 
     class Meta:
         model = Planning
@@ -16,12 +16,17 @@ class PlanningSerializer(serializers.ModelSerializer):
             "number_of_cycles",
             "expense",
             "category",
-            # "account",
+            "account_id",
         ]
+        read_only_fields = ["account_id"]
 
-    def get_category(self, obj):
-        get_category = Categories.objects.get(id=obj.category.id)
-        return get_category.name
+    def create(self, validated_data):
+        category_data = validated_data.pop("category")
+        category_obj = Categories.objects.get_or_create(**category_data)[0]
+        planning_obj = Planning.objects.create(
+            **validated_data, category_id=category_obj.id
+        )
+        return planning_obj
 
     def update(self, instance: Planning, validated_data: dict):
         for key, value in validated_data.items():

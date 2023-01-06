@@ -3,6 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    path("planning/", views.PlanningView.as_view()),
-    path("planning/<uuid:plan_uuid>/", views.PlanningDetailView.as_view()),
+    path("planning/create/<str:account_uuid>/", views.PlanningCreateView.as_view()),
+    path("planning/", views.PlanningListView.as_view()),
+    path("planning/<str:plan_uuid>/", views.PlanningDetailView.as_view()),
 ]
