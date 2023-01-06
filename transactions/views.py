@@ -50,7 +50,7 @@ class ListCreateTransactions(ListCreateAPIView):
         if 'category' in request.data:
             category_request = request.data.pop('category')
             category, _ = Categories.objects.get_or_create(
-                {"name": category_request})
+                name=category_request)
             request.data["category"] = category.id
 
         return super().create(request, *args, **kwargs)
@@ -61,3 +61,11 @@ class RetrieveUpdateDestroyTransaction(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsTransactionOwner]
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+
+    def update(self, request, *args, **kwargs):
+        if 'category' in request.data:
+            category_request = request.data.pop('category')
+            category, _ = Categories.objects.get_or_create(
+                name=category_request)
+            request.data["category"] = category.id
+        return super().update(request, *args, **kwargs)
