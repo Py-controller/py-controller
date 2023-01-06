@@ -1,13 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
-import datetime
+from cpf_field.models import CPFField
 
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    birthdate = models.DateField(default=datetime.date.today)
-    cpf = models.CharField(max_length=14)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    birthdate = models.DateField()
+    cpf = CPFField()
+    email = models.EmailField(max_length=200)
     # address = models.ForeignKey(
     #     "address.Address",
     #     on_delete=models.CASCADE,
