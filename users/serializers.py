@@ -1,8 +1,11 @@
 from rest_framework import serializers
 from .models import User
+import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(max_length=50)
 
     class Meta:
         model = User
@@ -16,12 +19,15 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             # "address",
             "password",
+            "is_superuser",
             "is_active",
         ]
         extra_kwargs = {
+            "birthdate": {"default": datetime.date.today},
             # "address": {"required": True},
             "password": {"write_only": True},
             "is_active": {"read_only": True},
+            "is_superuser": {"read_only": True}
         }
 
     def create(self, validated_data: dict) -> User:

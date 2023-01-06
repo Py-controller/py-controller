@@ -41,6 +41,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cpf_field",
 ]
 
 THIRD_PARTY_APPS = [
