@@ -34,10 +34,14 @@ class AccountDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class DeveloperFilter(filters.FilterSet):
-    transaction_type = filters.CharFilter(field_name="transaction_type", lookup_expr="icontains")
+    transaction_type = filters.CharFilter(
+        field_name="transaction_type", lookup_expr="icontains"
+    )
     account_id = filters.CharFilter(field_name="id", lookup_expr="icontains")
     description = filters.CharFilter(field_name="description", lookup_expr="icontains")
-    transaction_data = filters.NumberFilter(field_name="transaction_data", lookup_expr="icontains")
+    transaction_data = filters.NumberFilter(
+        field_name="transaction_data", lookup_expr="icontains"
+    )
 
 
 class AccountTransactionView(generics.ListCreateAPIView):
