@@ -29,7 +29,7 @@ class Planning(models.Model):
     planning_cycle = models.CharField(
         choices=PlanningCycleChoice.choices, max_length=10
     )
-    number_of_cycles = models.IntegerField(default=1)
+    number_of_cycles = models.PositiveIntegerField(default=1)
     expense = models.DecimalField(max_digits=15, decimal_places=2, null=False)
 
     account = models.ForeignKey(

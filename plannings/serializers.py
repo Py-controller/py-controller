@@ -1,10 +1,7 @@
 from rest_framework import serializers
-
-from categories.serializers import CategoriesNotIdSerializer, CategoriesSerializer
+from categories.serializers import CategoriesNotIdSerializer
 from .models import Planning
 from categories.models import Categories
-from accounts.models import Account
-import ipdb
 
 
 class PlanningSerializer(serializers.ModelSerializer):
@@ -26,13 +23,13 @@ class PlanningSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         category_data = validated_data.pop("category")
         category_obj = Categories.objects.get_or_create(**category_data)[0]
-        planning_obj = Planning.objects.create(**validated_data, category_id=category_obj.id)
+        planning_obj = Planning.objects.create(
+            **validated_data, category_id=category_obj.id
+        )
         return planning_obj
-
 
     def update(self, instance: Planning, validated_data: dict):
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()
         return instance
-
