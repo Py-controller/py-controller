@@ -20,7 +20,6 @@ class StartChoice(models.TextChoices):
 class PlanningCycleChoice(models.TextChoices):
     MONTH = "Month"
     YEAR = "Year"
-    SEMESTER = "Semester"
 
 
 class Planning(models.Model):
