@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Transaction",
+            name="Planning",
             fields=[
                 (
                     "id",
@@ -27,20 +27,39 @@ class Migration(migrations.Migration):
                         serialize=False,
                     ),
                 ),
-                ("amount", models.DecimalField(decimal_places=2, max_digits=15)),
-                ("description", models.CharField(max_length=255)),
                 (
-                    "transaction_type",
+                    "start",
                     models.CharField(
-                        choices=[("payment", "Pmt"), ("receipt", "Rct")], max_length=7
+                        choices=[
+                            ("January", "January"),
+                            ("February", "February"),
+                            ("March", "March"),
+                            ("April", "April"),
+                            ("May", "May"),
+                            ("June", "June"),
+                            ("July", "July"),
+                            ("August", "August"),
+                            ("September", "September"),
+                            ("October", "October"),
+                            ("November", "November"),
+                            ("December", "December"),
+                        ],
+                        max_length=10,
                     ),
                 ),
-                ("transaction_date", models.DateField()),
+                (
+                    "planning_cycle",
+                    models.CharField(
+                        choices=[("Month", "Month"), ("Year", "Year")], max_length=10
+                    ),
+                ),
+                ("number_of_cycles", models.PositiveIntegerField(default=1)),
+                ("expense", models.DecimalField(decimal_places=2, max_digits=15)),
                 (
                     "account",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="transactions",
+                        related_name="plannings",
                         to="accounts.account",
                     ),
                 ),
@@ -48,7 +67,7 @@ class Migration(migrations.Migration):
                     "category",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="transactions",
+                        related_name="planning",
                         to="categories.categories",
                     ),
                 ),
