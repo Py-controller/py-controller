@@ -3,7 +3,9 @@
  
  
  # .Py Controller 📊  
-*Controlando e organizando suas finanças*
+**Controlando e organizando suas finanças**
+
+***➡ Quer acessar a documentação das rotas: [Clique aqui](https://py-controller-adol.onrender.com/api/docs)***
 
 <br />
 
