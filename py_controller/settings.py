@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     # "django-crontab",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
 
 MY_APPS = [
@@ -147,9 +148,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": ".Py_controller",
+    "DESCRIPTION": "Controle de finanças pessoas",
+    "VERSION": "v0.5.0-alpha",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
 }
 
 # Internationalization
