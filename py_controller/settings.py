@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     # "django-crontab",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
 
 MY_APPS = [
@@ -147,9 +148,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": ".Py_controller",
+    "DESCRIPTION": "Controle de finanças pessoas",
+    "VERSION": "v0.5.0-alpha",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
 }
 
 # Internationalization
