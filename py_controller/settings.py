@@ -79,7 +79,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-	'http://localhost:3000'
+	'https://py-controller-adol.onrender.com'
 ]
 
 CORS_ALLOW_ALL_ORIGINS=True
