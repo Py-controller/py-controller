@@ -78,10 +78,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-	'https://py-controller-adol.onrender.com'
-]
-
 CORS_ALLOW_ALL_ORIGINS=True
 
 ROOT_URLCONF = "py_controller.urls"
