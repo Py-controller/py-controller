@@ -60,6 +60,7 @@ MY_APPS = [
     "address",
     "accounts",
     "categories",
+    "reports"
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -106,8 +107,8 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": "db_py_controller",
-        "PORT": 5432,
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     },
     "sqlite3": {
         "ENGINE": "django.db.backends.sqlite3",
