@@ -51,6 +51,7 @@ THIRD_PARTY_APPS = [
     # "django-crontab",
     "rest_framework_simplejwt",
     "drf_spectacular",
+    'corsheaders',
 ]
 
 MY_APPS = [
@@ -74,7 +75,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS=True
 
 ROOT_URLCONF = "py_controller.urls"
 
