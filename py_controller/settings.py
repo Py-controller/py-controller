@@ -48,10 +48,10 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    # "django-crontab",
+    "django_crontab",
     "rest_framework_simplejwt",
     "drf_spectacular",
-    'corsheaders',
+    "corsheaders",
 ]
 
 MY_APPS = [
@@ -75,10 +75,10 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = "py_controller.urls"
 
@@ -171,7 +171,7 @@ SPECTACULAR_SETTINGS = {
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Sao_Paulo"
 
 USE_I18N = True
 
@@ -191,4 +191,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 
-# CRONJOBS = [("0 0 * * *", "users.tasks.delete_inactive_users")]
+CRONJOBS = [("00 16 * * *", "users.tasks.delete_inactive_users")]
