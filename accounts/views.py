@@ -18,8 +18,10 @@ from rest_framework import generics
 class AccountView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+    def get_queryset(self):
+        return Account.objects.filter(user_id=self.request.user)
 
     def perform_create(self, serializer):
         return serializer.save(user_id=self.request.user.id)
