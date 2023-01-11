@@ -13,25 +13,25 @@ services:
       timeout: 2s
       retries: 5
 
-  migrations:
-    build: .
-    command: python manage.py migrate
-    depends_on:
-      db_py_controller:
-        condition: service_healthy
+  # migrations:
+  #   build: .
+  #   command: python manage.py migrate
+  #   depends_on:
+  #     db_py_controller:
+  #       condition: service_healthy
 
-  web:
-    build: .
-    env_file: .env
-    command: python manage.py runserver 0.0.0.0:8000
-    stdin_open: true
-    tty: true
-    ports:
-      - 8000:8000
-    depends_on:
-      db_py_controller:
-        condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
-    volumes:
-      - .:/app/py_controller/
+  # web:
+  #   build: .
+  #   env_file: .env
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   stdin_open: true
+  #   tty: true
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     db_py_controller:
+  #       condition: service_healthy
+  #     migrations:
+  #       condition: service_completed_successfully
+  #   volumes:
+  #     - .:/app/py_controller/

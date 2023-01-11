@@ -4,6 +4,7 @@ import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = [
@@ -14,21 +15,21 @@ class UserSerializer(serializers.ModelSerializer):
             "cpf",
             "email",
             "username",
-            # "address",
+            "address",
             "password",
             "is_superuser",
             "is_active",
         ]
+
+        depth = 1
+
         extra_kwargs = {
             "birthdate": {"default": datetime.date.today},
-            # "address": {"required": True},
+            "address": {"required": True},
             "password": {"write_only": True},
             "is_active": {"read_only": True},
             "is_superuser": {"read_only": True}
         }
-
-    def create(self, validated_data: dict) -> User:
-        return User.objects.create_user(**validated_data)
 
     def update(self, instance: User, validated_data: dict) -> User:
         for key, value in validated_data.items():

@@ -12,8 +12,9 @@ class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True)
     cpf = CPFField()
     email = models.EmailField(max_length=200)
-    # address = models.ForeignKey(
-    #     "address.Address",
-    #     on_delete=models.CASCADE,
-    #     related_name="users",
-    # )
+    address = models.ForeignKey(
+        "address.Address",
+        on_delete=models.CASCADE,
+        related_name="users",
+        default=None,
+    )
