@@ -9,6 +9,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     birthdate = models.DateField()
+    username = models.CharField(max_length=150, unique=True)
     cpf = CPFField()
     email = models.EmailField(max_length=200)
     # address = models.ForeignKey(
