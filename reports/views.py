@@ -1,4 +1,3 @@
-import ipdb
 from transactions.models import Transaction
 from accounts.models import Account
 from plannings.models import Planning
@@ -10,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from decimal import Decimal
 from accounts.serializers import AccountSerializer
+import datetime
 
 
 class ReportView(APIView):
@@ -52,6 +52,7 @@ class ReportView(APIView):
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
             user_transactions = user_transactions.filter(
+
                 category=category)
 
         user_plannings = Planning.objects.filter(
@@ -59,7 +60,24 @@ class ReportView(APIView):
         )
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
-            user_plannings = user_plannings.filter(category=category)
+            user_plannings = user_plannings.filter(category_id=category.id)
+        if start_date_parameter and end_date_parameter:
+            start_date_list = [int(x)
+                               for x in start_date_parameter.rsplit("-")]
+            start_month = datetime.date(*start_date_list).strftime('%m')
+            end_date_list = [int(x) for x in end_date_parameter.rsplit("-")]
+            end_month = datetime.date(*end_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(
+                start__gte=start_month, start__lte=end_month)
+        if start_date_parameter:
+            start_date_list = [int(x)
+                               for x in start_date_parameter.rsplit("-")]
+            start_month = datetime.date(*start_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(start__gte=start_month)
+        if end_date_parameter:
+            end_date_list = [int(x) for x in end_date_parameter.rsplit("-")]
+            end_month = datetime.date(*end_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(start__lte=end_month)
 
         initial_balance = user_accounts.aggregate(Sum("balance"))
         total_income = user_transactions.filter(transaction_type="receipt").aggregate(
@@ -68,10 +86,9 @@ class ReportView(APIView):
         total_expenses = user_transactions.filter(transaction_type="payment").aggregate(
             Sum("amount")
         )
-
         current_balance = (
-            (initial_balance["balance__sum"]
-             if not initial_balance["balance__sum"] == None else Decimal("0.00"))
+            (initial_balance["balance__sum"] if not initial_balance["balance__sum"] == None
+                else Decimal("0.00"))
             + (
                 total_income["amount__sum"]
                 if not total_income["amount__sum"] == None
@@ -88,11 +105,15 @@ class ReportView(APIView):
         for account in user_accounts:
             account_transactions = user_transactions.filter(
                 account_id=account.id)
+            account_transactions = user_transactions.filter(
+                account_id=account.id)
             expenses = account_transactions.filter(
                 transaction_type="payment"
             ).aggregate(Sum("amount"))
 
             account_plannings = user_plannings.filter(account_id=account.id)
+            total_planned_expenses = account_plannings.aggregate(
+                Sum("expense"))
             total_planned_expenses = account_plannings.aggregate(
                 Sum("expense"))
 
@@ -132,8 +153,7 @@ class AccountReportsView(APIView):
     serializer_class = AccountSerializer
 
     def get(self, request: Request, account_uuid: str) -> Response:
-        get_object_or_404(Account, id=account_uuid)
-        account_id_obj = Account.objects.get(id=account_uuid)
+        account_id_obj = get_object_or_404(Account, id=account_uuid)
 
         queryset_transaction = Transaction.objects.filter(
             account=account_id_obj)
@@ -179,10 +199,6 @@ class AccountReportsView(APIView):
             transaction_type="payment"
         ).aggregate(Sum("amount"))
 
-        expenses = queryset_transaction.filter(transaction_type="payment").aggregate(
-            Sum("amount")
-        )
-
         current_balance = (
             account_id_obj.balance
             + (
@@ -205,8 +221,8 @@ class AccountReportsView(APIView):
                 "account": account_id_obj.account_number,
                 "remaining_limit": account_id_obj.overdraft_limit
                 - (
-                    expenses["amount__sum"]
-                    if not expenses["amount__sum"] == None
+                    total_expenses["amount__sum"]
+                    if not total_expenses["amount__sum"] == None
                     else Decimal("0.00")
                 ),
                 "total_planned_expenses": total_planned_expenses["expense__sum"],
@@ -222,3 +238,91 @@ class AccountReportsView(APIView):
         }
 
         return Response(user_report)
+
+
+class PlanningsReportsView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request: Request) -> Response:
+        start_date_parameter = request.GET.get("start_date")
+        end_date_parameter = request.GET.get("end_date")
+        category_parameter = request.GET.get("category")
+        account_parameter = request.GET.get('account')
+
+        user_accounts = Account.objects.filter(user_id=request.user.id)
+        if account_parameter:
+            account = get_object_or_404(Account, pk=account_parameter)
+            user_accounts = user_accounts.filter(id=account.id)
+
+        user_transactions = Transaction.objects.filter(
+            account__in=user_accounts.values_list("id", flat=True)
+        )
+        if category_parameter:
+            category = get_object_or_404(Categories, name=category_parameter)
+            user_transactions = user_transactions.filter(
+                category_id=category.id)
+        if start_date_parameter and end_date_parameter:
+            user_transactions = user_transactions.filter(
+                transaction_date__gte=start_date_parameter,
+                transaction_date__lte=end_date_parameter,
+            )
+        if start_date_parameter:
+            user_transactions = user_transactions.filter(
+                transaction_date__gte=start_date_parameter
+            )
+        if end_date_parameter:
+            user_transactions = user_transactions.filter(
+                transaction_date__lte=end_date_parameter
+            )
+
+        user_plannings = Planning.objects.filter(
+            account__in=user_accounts.values_list("id", flat=True)
+        )
+        if category_parameter:
+            category = get_object_or_404(Categories, name=category_parameter)
+            user_plannings = user_plannings.filter(category_id=category.id)
+        if start_date_parameter and end_date_parameter:
+            start_date_list = [int(x)
+                               for x in start_date_parameter.rsplit("-")]
+            start_month = datetime.date(*start_date_list).strftime('%m')
+            end_date_list = [int(x) for x in end_date_parameter.rsplit("-")]
+            end_month = datetime.date(*end_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(
+                start__gte=start_month, start__lte=end_month)
+        if start_date_parameter:
+            start_date_list = [int(x)
+                               for x in start_date_parameter.rsplit("-")]
+            start_month = datetime.date(*start_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(start__gte=start_month)
+        if end_date_parameter:
+            end_date_list = [int(x) for x in end_date_parameter.rsplit("-")]
+            end_month = datetime.date(*end_date_list).strftime('%m')
+            user_plannings = user_plannings.filter(start__lte=end_month)
+
+        total_planned_expenses = user_plannings.aggregate(Sum("expense"))
+        total_spent = user_transactions.filter(
+            transaction_type="payment").aggregate(Sum("amount"))
+
+        planned_categories_set = set(
+            user_plannings.values_list('category', flat=True))
+        planned_categories = list(Categories.objects.filter(
+            id__in=planned_categories_set).values_list('name', flat=True))
+        spent_categories_set = set(
+            user_transactions.values_list('category', flat=True))
+        spent_categories = list(Categories.objects.filter(
+            id__in=spent_categories_set).values_list('name', flat=True))
+
+        user_report = {
+            "total_planned_expenses": total_planned_expenses['expense__sum'],
+            "total_spent": total_spent['amount__sum'],
+            "planned_categories": planned_categories,
+            "spent_categories": spent_categories
+        }
+        if category_parameter:
+            user_report = {category_parameter: {
+                "total_planned_expenses": total_planned_expenses['expense__sum'],
+                "total_spent": total_spent['amount__sum'],
+            }}
+
+        return Response(user_report, status.HTTP_200_OK)

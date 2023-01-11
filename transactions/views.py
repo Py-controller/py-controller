@@ -6,9 +6,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from accounts.models import Account
 from .permissions import IsTransactionOwner
+from django.shortcuts import get_object_or_404
+import ipdb
 
 
-class ListCreateTransactions(ListCreateAPIView):
+class TransactionsView(ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Transaction.objects.all()
@@ -46,26 +48,30 @@ class ListCreateTransactions(ListCreateAPIView):
 
         return queryset
 
-    def create(self, request, *args, **kwargs):
-        if 'category' in request.data:
-            category_request = request.data.pop('category')
-            category, _ = Categories.objects.get_or_create(
-                name=category_request)
-            request.data["category"] = category.id
+    def perform_create(self, serializer):
+        category_request = self.request.data.pop('category')
+        category, _ = Categories.objects.get_or_create(
+            name=category_request)
+        account, _ = Account.objects.get_or_create(
+            pk=self.request.data['account'])
+        return serializer.save(account=account, category=category)
 
-        return super().create(request, *args, **kwargs)
 
-
-class RetrieveUpdateDestroyTransaction(RetrieveUpdateDestroyAPIView):
+class TransactionDetailView(RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsTransactionOwner]
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
-    def update(self, request, *args, **kwargs):
-        if 'category' in request.data:
-            category_request = request.data.pop('category')
+    def perform_update(self, serializer):
+        if 'category' in self.request.data:
+            category_request = self.request.data.pop('category')
             category, _ = Categories.objects.get_or_create(
                 name=category_request)
-            request.data["category"] = category.id
-        return super().update(request, *args, **kwargs)
+            serializer.save(category=category)
+        if 'account' in self.request.data:
+            account_request = self.request.data.pop('account')
+            account = get_object_or_404(Account, pk=account_request)
+            serializer.save(account=account)
+
+        return serializer.save()
