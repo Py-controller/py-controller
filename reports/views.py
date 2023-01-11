@@ -52,7 +52,8 @@ class ReportView(APIView):
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
             user_transactions = user_transactions.filter(
-                category_id=category.id)
+
+                category=category)
 
         user_plannings = Planning.objects.filter(
             account__in=user_accounts.values_list("id", flat=True)
@@ -104,11 +105,15 @@ class ReportView(APIView):
         for account in user_accounts:
             account_transactions = user_transactions.filter(
                 account_id=account.id)
+            account_transactions = user_transactions.filter(
+                account_id=account.id)
             expenses = account_transactions.filter(
                 transaction_type="payment"
             ).aggregate(Sum("amount"))
 
             account_plannings = user_plannings.filter(account_id=account.id)
+            total_planned_expenses = account_plannings.aggregate(
+                Sum("expense"))
             total_planned_expenses = account_plannings.aggregate(
                 Sum("expense"))
 
@@ -148,8 +153,7 @@ class AccountReportsView(APIView):
     serializer_class = AccountSerializer
 
     def get(self, request: Request, account_uuid: str) -> Response:
-        get_object_or_404(Account, id=account_uuid)
-        account_id_obj = Account.objects.get(id=account_uuid)
+        account_id_obj = get_object_or_404(Account, id=account_uuid)
 
         queryset_transaction = Transaction.objects.filter(
             account=account_id_obj)
@@ -195,10 +199,6 @@ class AccountReportsView(APIView):
             transaction_type="payment"
         ).aggregate(Sum("amount"))
 
-        expenses = queryset_transaction.filter(transaction_type="payment").aggregate(
-            Sum("amount")
-        )
-
         current_balance = (
             account_id_obj.balance
             + (
@@ -221,8 +221,8 @@ class AccountReportsView(APIView):
                 "account": account_id_obj.account_number,
                 "remaining_limit": account_id_obj.overdraft_limit
                 - (
-                    expenses["amount__sum"]
-                    if not expenses["amount__sum"] == None
+                    total_expenses["amount__sum"]
+                    if not total_expenses["amount__sum"] == None
                     else Decimal("0.00")
                 ),
                 "total_planned_expenses": total_planned_expenses["expense__sum"],
@@ -324,4 +324,5 @@ class PlanningsReportsView(APIView):
                 "total_planned_expenses": total_planned_expenses['expense__sum'],
                 "total_spent": total_spent['amount__sum'],
             }}
+
         return Response(user_report, status.HTTP_200_OK)

@@ -4,8 +4,8 @@ from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 
 class ShiftOptions(models.TextChoices):
-    CC = "Current account"
-    CP = "Savings account"
+    CC = "checking"
+    CP = "savings"
 
 
 class Account(models.Model):
