@@ -1,16 +1,33 @@
 from django.utils import timezone
 from .models import User
+from address.models import Address
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import UserSerializer
 from rest_framework import generics, status
 from .permissions import IsAccountOwner
 from rest_framework_simplejwt.views import TokenObtainPairView
+from address.serializers import AddressSerializer
+
+from django.core.exceptions import ValidationError
+from rest_framework import serializers
 
 
 class UserView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def perform_create(self, serializer):
+        if "address" in self.request.data:
+            address_request = self.request.data.pop("address")
+            addressValidated = AddressSerializer(data=address_request)
+
+            addressValidated.is_valid(raise_exception=True)
+            address = Address.objects.create(**addressValidated.data)
+
+            return serializer.save(address=address)
+        else:
+            raise serializers.ValidationError({"address": ["This field is required."]})
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):

@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import AddressSerializer
 from rest_framework import generics
 
+
 class AddressView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
