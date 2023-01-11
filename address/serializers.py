@@ -1,11 +1,8 @@
 from rest_framework import serializers
 from .models import Address
 
-class AddressSerializer(serializers.ModelSerializer):
 
-    id = serializers.UUIDField(read_only=True)
-    def create(self, validated_data):
-        return Address.objects.create(**validated_data)
+class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
@@ -17,8 +14,8 @@ class AddressSerializer(serializers.ModelSerializer):
             "city",
             "number",
             "state",
-           ]
+        ]
         read_only_fields = ["id"]
-    
 
-    
+    def create(self, validated_data):
+        return Address.objects.create(**validated_data)
