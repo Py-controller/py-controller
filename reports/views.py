@@ -1,4 +1,3 @@
-import ipdb
 from transactions.models import Transaction
 from accounts.models import Account
 from plannings.models import Planning
