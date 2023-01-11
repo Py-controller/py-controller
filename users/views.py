@@ -7,12 +7,10 @@ from rest_framework import generics, status
 from .permissions import IsAccountOwner
 from rest_framework_simplejwt.views import TokenObtainPairView
 from address.serializers import AddressSerializer
-
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 
-class UserView(generics.ListCreateAPIView):
+class UserView(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -20,14 +18,15 @@ class UserView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if "address" in self.request.data:
             address_request = self.request.data.pop("address")
-            addressValidated = AddressSerializer(data=address_request)
+            addressSerializer = AddressSerializer(data=address_request)
 
-            addressValidated.is_valid(raise_exception=True)
-            address = Address.objects.create(**addressValidated.data)
+            addressSerializer.is_valid(raise_exception=True)
+            address = Address.objects.create(**addressSerializer.data)
 
             return serializer.save(address=address)
         else:
-            raise serializers.ValidationError({"address": ["This field is required."]})
+            raise serializers.ValidationError(
+                {"address": ["This field is required."]})
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -36,6 +35,17 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_url_kwarg = "user_uuid"
+
+    def perform_update(self, serializer):
+        if "address" in self.request.data:
+            user_address = Address.objects.get(pk=self.request.user.address.id)
+            address_request = self.request.data.pop("address")
+            addressSerializer = AddressSerializer(
+                user_address, data=address_request, partial=True)
+
+            addressSerializer.is_valid(raise_exception=True)
+            addressSerializer.save()
+        return serializer.save()
 
 
 class PersonalizedTokenObtainPairView(TokenObtainPairView):
