@@ -8,6 +8,9 @@ from .permissions import IsAccountOwner
 from rest_framework_simplejwt.views import TokenObtainPairView
 from address.serializers import AddressSerializer
 
+from django.core.exceptions import ValidationError
+from rest_framework import serializers
+
 
 class UserView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
@@ -15,12 +18,16 @@ class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
 
     def perform_create(self, serializer):
+        if "address" in self.request.data:
+            address_request = self.request.data.pop("address")
+            addressValidated = AddressSerializer(data=address_request)
 
-        address_request = self.request.data.pop("address")
-        address, _ = Address.objects.get_or_create(
-            **address_request)
+            addressValidated.is_valid(raise_exception=True)
+            address = Address.objects.create(**addressValidated.data)
 
-        return serializer.save(address=address)
+            return serializer.save(address=address)
+        else:
+            raise serializers.ValidationError({"address": ["This field is required."]})
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
