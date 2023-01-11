@@ -51,14 +51,15 @@ class ReportView(APIView):
             )
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
-            user_transactions = user_transactions.filter(category_id=category.id)
+            user_transactions = user_transactions.filter(
+                category=category)
 
         user_plannings = Planning.objects.filter(
             account__in=user_accounts.values_list("id", flat=True)
         )
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
-            user_transactions = user_plannings.filter(category_id=category.id)
+            user_plannings = user_plannings.filter(category=category)
 
         initial_balance = user_accounts.aggregate(Sum("balance"))
         total_income = user_transactions.filter(transaction_type="receipt").aggregate(
@@ -67,9 +68,10 @@ class ReportView(APIView):
         total_expenses = user_transactions.filter(transaction_type="payment").aggregate(
             Sum("amount")
         )
-        # ipdb.set_trace()
+
         current_balance = (
-            initial_balance["balance__sum"]
+            (initial_balance["balance__sum"]
+             if not initial_balance["balance__sum"] == None else Decimal("0.00"))
             + (
                 total_income["amount__sum"]
                 if not total_income["amount__sum"] == None
@@ -84,13 +86,15 @@ class ReportView(APIView):
 
         limits_overview = []
         for account in user_accounts:
-            account_transactions = user_transactions.filter(account_id=account.id)
+            account_transactions = user_transactions.filter(
+                account_id=account.id)
             expenses = account_transactions.filter(
                 transaction_type="payment"
             ).aggregate(Sum("amount"))
 
             account_plannings = user_plannings.filter(account_id=account.id)
-            total_planned_expenses = account_plannings.aggregate(Sum("expense"))
+            total_planned_expenses = account_plannings.aggregate(
+                Sum("expense"))
 
             limits_overview.append(
                 {
@@ -131,7 +135,8 @@ class AccountReportsView(APIView):
         get_object_or_404(Account, id=account_uuid)
         account_id_obj = Account.objects.get(id=account_uuid)
 
-        queryset_transaction = Transaction.objects.filter(account=account_id_obj)
+        queryset_transaction = Transaction.objects.filter(
+            account=account_id_obj)
 
         account_type_parameter = request.GET.get("account_type")
         transaction_type_parameter = request.GET.get("transaction_type")
@@ -163,7 +168,8 @@ class AccountReportsView(APIView):
             )
         if category_parameter:
             category = get_object_or_404(Categories, name=category_parameter)
-            queryset_transaction = queryset_transaction.filter(category_id=category.id)
+            queryset_transaction = queryset_transaction.filter(
+                category_id=category.id)
 
         total_income = queryset_transaction.filter(
             transaction_type="receipt"
