@@ -4,9 +4,6 @@ import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-    username = serializers.CharField(max_length=50)
-
     class Meta:
         model = User
         fields = [
