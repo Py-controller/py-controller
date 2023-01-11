@@ -4,7 +4,6 @@ import datetime
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = [
@@ -28,8 +27,11 @@ class UserSerializer(serializers.ModelSerializer):
             "address": {"required": True},
             "password": {"write_only": True},
             "is_active": {"read_only": True},
-            "is_superuser": {"read_only": True}
+            "is_superuser": {"read_only": True},
         }
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 
     def update(self, instance: User, validated_data: dict) -> User:
         for key, value in validated_data.items():
